@@ -1,0 +1,93 @@
+create database Tourist_Packages
+
+create table User (
+    id varchar(10) primary key ,
+    first_name varchar(7) not null ,
+    last_name varchar(10) not null ,
+    age int not null check (age >= 18) ,
+    nationality varchar(10),
+    email varchar(25)  not null unique ,
+    phone_number varchar(10) not null ,
+    partners int default 2,
+    children int default 0
+);
+
+create table Flight(
+     code varchar(6) primary key ,
+     airline_name varchar(12) unique not null ,
+     from_city varchar(15) unique  not null ,
+     to_city varchar(15) unique not null ,
+     one_way boolean default true,
+     round_trip boolean default false,
+     trip_date datetime default current_timestamp,
+     class varchar(8)  default 'Economy' check ( class='Economy' or class='Business' or class='First'),
+     price double not null
+);
+
+create table Hotel(
+      id varchar(10) primary key ,
+      name varchar(7) unique not null ,
+      room int default 1,
+      class_room varchar(8)  default 'Double' check (class_room='Single' or class_room='Double' or class_room='Suite' or class_room='Studio' ),
+      check_in datetime default current_timestamp,
+      check_out datetime not null ,
+      price double not null
+);
+
+ create table Packages(
+     code varchar(5) primary key ,
+     name varchar(5) unique not null ,
+     user_id varchar(10),
+     foreign key (user_id) references User(id),
+     flight_code varchar(6),
+     foreign key (flight_code) references Flight(code),
+     hotel_id varchar(6),
+     foreign key (hotel_id) references Hotel(id),
+     price double not null ,
+     payment varchar(6) not null check ( payment='Visa' or payment='Mada' or payment='PayPal') ,
+     booking_date datetime default current_timestamp not null
+ );
+
+insert into User values ('1234567890', 'John', 'Doe', 25, 'USA', 'johndoe@gmail.com', '1234567890',default,default);
+insert into User values ('2345678901', 'Alice', 'Smith', 30, 'UK', 'aliceth@hotmail.com', '2345678901',default,default);
+insert into User values ('3456789012', 'Emily', 'Johnson', 28, 'Canada', 'emiloon@hotmail.com', '3456789012',2,1);
+insert into User values ('4567890123', 'Michael', 'Brown', 35, 'Australia', 'milbrown@hotmail.com', '4567890123',1,2);
+insert into User values ('5678901234', 'Sarah', 'Davis', 22, 'Germany', 'sarahis@gmail.com', '5678901234',default,default);
+
+
+insert into Flight values ('ABC123', 'Airline1', 'NewYork', 'Los Angeles', true, false, default, 'Economy', 250.50);
+insert into Flight values ('DEF456', 'Airline2', 'London', 'Paris', false, true, '2024-10-10', 'Business', 500.75);
+insert into Flight values ('GHI789', 'Airline3', 'Tokyo', 'Sydney', true, false, default, 'Economy', 350.20);
+insert into Flight values ('JKL012', 'Airline4', 'Dubai', 'Istanbul', false, true, '2024-12-05', 'First', 800.00);
+insert into Flight values ('MNO345', 'Airline5', 'Rome', 'Madrid', true, false, default, 'Business', 600.30);
+insert into Flight values ('FL001', 'Airline6', 'Dammam', 'Riyadh',true,false, '2024-10-10','Economy',250.00);
+
+insert into Hotel values ('HOT001', 'Hotel A', 2, default,default, '2024-09-20', 150.00);
+insert into Hotel values ('HOT002', 'Hotel B', 1, 'Single', default,'2024-10-05', 100.50);
+insert into Hotel values ('HOT003', 'Hotel C', 3, 'Suite', default,'2024-11-15', 200.75);
+insert into Hotel values ('HOT004', 'Hotel D', 2, default, default,'2024-12-10', 180.25);
+insert into Hotel values ('HOT005', 'Hotel E', 1, 'Studio', default,'2024-01-25', 120.00);
+
+
+insert into Packages values ('P001', 'Pack1', '1234567890', 'ABC123', 'HOT001', 400.00, 'Visa',default);
+insert into Packages values ('P002', 'Pack2', '2345678901', 'DEF456', 'HOT002',600.50, 'Mada', default);
+insert into Packages values ('P003', 'Pack3', '3456789012', 'GHI789', 'HOT003',800.75, 'PayPal', default);
+insert into Packages values ('P004', 'Pack4', '4567890123', 'JKL012', 'HOT004',1000.00, 'Visa', default);
+insert into Packages values ('P005', 'Pack5', '5678901234', 'MNO345', 'HOT005',900.25, 'Mada', default);
+
+
+
+update Packages set price = 500.00 where code = 'P002';
+
+update Hotel set name = 'Hotel10' where id = 'HOT001';
+
+update Flight set to_city = 'TokYou' where code = 'FL001';
+delete from Flight where code='FL001';
+ update user set email='johndoe@gmail.com' where id='1234567890';
+
+
+select * from User;
+select * from Flight;
+select * from Hotel;
+select * from Packages;
+
